@@ -1,5 +1,7 @@
 import Agent from './agent'
 import { agents } from './agents';
+import "./clippy.css";
+
 
 export interface LoadOptions {
     name: string;

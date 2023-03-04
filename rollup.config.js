@@ -3,6 +3,9 @@ import path from 'path';
 import buble from '@rollup/plugin-buble';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import uglify from "@lopatnov/rollup-plugin-uglify";
+
+import styles from "rollup-plugin-styles";
 
 const { dependencies } = require('./package.json');
 
@@ -15,13 +18,14 @@ if (!fs.existsSync(dist)) {
 }
 
 module.exports = {
-    input: 'dist-tsc/lib/index.js',
+    input: 'dist-tsc/src/index.js',
     external: Object.keys(dependencies),
     plugins: [
+        styles(),
         buble(),
         nodeResolve({ external: ['vue'] }),
         commonjs(),
-        // uglify({}, minify)
+        uglify()
     ],
     output: [
         {
