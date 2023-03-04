@@ -11,7 +11,7 @@ var talks = [
 const randPos = () => .2 + Math.random() * .6
 
 function nextAgent () {
-    let agentName = availableAgents.pop()
+    let agentName = availableAgents[Math.floor(Math.random() * (availableAgents.length))]
     if (!agentName) return;
 
     clippy.load({
@@ -26,7 +26,7 @@ function nextAgent () {
                 agent.speak('I am ' + agentName + ', ' + talks[~~(Math.random() * talks.length)])
                 agent.animate()
             }
-            $(agent._el).click(() => speak())
+            $(agent._el).on('click', () => speak())
             speak()
 
             // Animate randomly
