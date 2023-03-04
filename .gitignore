@@ -5,4 +5,4 @@
 node_modules
 .vscode/settings.json
 /dist-tsc
-dist-tsc/lib/load.js
+dist-tsc/lib/*.js
