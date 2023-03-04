@@ -16,7 +16,6 @@ if (!fs.existsSync(dist)) {
 module.exports = {
     input: 'dist-tsc/lib/index.js',
     external: Object.keys(dependencies),
-    // moduleName: name,
     plugins: [
         buble(),
         resolve({ external: ['vue'] }),

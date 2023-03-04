@@ -1,6 +1,4 @@
-import $ from 'jquery'
 import Agent from './agent'
-import { ClippySound } from './types';
 import { agents } from './agents';
 
 export interface LoadOptions {
@@ -27,16 +25,18 @@ export class load {
         // wrapper to the success callback
         const agent = agents[name];
         if (!agent) {
-            if (failCb) failCb('Agent not found');
+            console.warn(`Agent name ${name} not fond`)
+            if (failCb) failCb(`Agent name ${name} not fond`);
             return;
+        } else {
+            let a = new Agent({
+                path, 
+                agent,
+                selector
+            });
+    
+            if (successCb) successCb(a);
         }
-        let a = new Agent({
-            path, 
-            agent,
-            selector
-        });
-
-        if (successCb) successCb(a);
     }
 }
 
