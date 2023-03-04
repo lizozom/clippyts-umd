@@ -17,7 +17,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "./lib/**/*.ts",
-    "lib/agents/Bonzi/agent.json"
+    "src/**/*.ts",
+    "src/**/*.css"
   ]
 }
