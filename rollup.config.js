@@ -1,8 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const buble = require('rollup-plugin-buble');
-const resolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
+import fs  from 'fs';
+import path from 'path';
+import buble from '@rollup/plugin-buble';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+
 const { dependencies } = require('./package.json');
 
 const name = 'clippy'
@@ -18,7 +19,7 @@ module.exports = {
     external: Object.keys(dependencies),
     plugins: [
         buble(),
-        resolve({ external: ['vue'] }),
+        nodeResolve({ external: ['vue'] }),
         commonjs(),
         // uglify({}, minify)
     ],
