@@ -15,14 +15,12 @@ export class load {
     constructor (options: LoadOptions) {
         let { 
             name,
-            base_path, 
             successCb, 
             failCb, 
             selector, 
         } = options || {};
-        base_path = base_path || 'https://cdn.jsdelivr.net/gh/pi0/clippyjs/assets/agents/'
-
-        let path = base_path + name;
+        
+        let path = `./assets/agents/${name}.png`;
 
         // wrapper to the success callback
         const agent = agents[name];

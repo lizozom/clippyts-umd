@@ -35,6 +35,7 @@ export interface ClippySound {
 
 export interface AgentWrapper {
     name: string;
+    image: string;
     config: AgentConfig;
     soundMp3: Record<string, string>;
     soundOgg: Record<string, string>;
