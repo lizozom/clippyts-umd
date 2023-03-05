@@ -4,10 +4,12 @@ import { soundMp3 } from './sounds-mp3';
 import { soundOgg } from './sounds-ogg';
 import merlinImg from './map.png';
 
-export const Merlin: AgentWrapper = {
+const Merlin: AgentWrapper = {
     name: 'Merlin',
     image: merlinImg,
     config: agent,
     soundMp3,
     soundOgg,
 }
+
+export default Merlin;

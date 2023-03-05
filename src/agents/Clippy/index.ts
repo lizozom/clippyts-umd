@@ -4,10 +4,12 @@ import { soundMp3 } from './sounds-mp3';
 import { soundOgg } from './sounds-ogg';
 import clippyImg from './map.png';
 
-export const Clippy: AgentWrapper = {
+const Clippy: AgentWrapper = {
     name: 'Clippy',
     image: clippyImg,
     config: agent,
     soundMp3,
     soundOgg,
 }
+
+export default Clippy;

@@ -37,11 +37,10 @@ const agentConfigs = getDirectories(agentDir).map(agent => {
             }),
         ],
         output: [
-
             {
                 file: dist + `/agents/${agent}.js`,
-                format: 'umd',
-                name: name,
+                format: 'iife',
+                name: `${name}.agents.${agent}`,
                 sourcemap: false,
             },
 
@@ -58,7 +57,7 @@ module.exports = [{
         typescript(),
         styles(),
         buble(),
-        nodeResolve({ external: ['vue'] }),
+        nodeResolve(),
         commonjs(),
         uglify()
     ],

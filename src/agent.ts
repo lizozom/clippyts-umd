@@ -4,7 +4,7 @@ import Balloon from './balloon'
 import { AgentWrapper } from './types';
 import { getHeight, getOffset, getWidth, getWindowScroll } from './utils';
 
-interface AgentOptions {
+export interface AgentOptions {
     agent: AgentWrapper;
     selector?: string;
 }

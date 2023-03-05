@@ -22,7 +22,7 @@ const ClippyDemo = (function() {
 
         clippy.load({
             name: agentName,
-            selector: ".my-clippy",
+            selector: "my-clippy",
             successCb: agent => {
                 window[agentName] = agent
                 agent.show();

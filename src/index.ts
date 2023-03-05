@@ -1,15 +1,13 @@
-import Agent from './agent'
-import Animator from './animator'
-import Queue from './queue'
-import Balloon from './balloon'
+import type Agent from './agent'
+import type Animator from './animator'
+import type Queue from './queue'
+import type Balloon from './balloon'
 import { load } from './load'
 
 const clippy = {
-    Agent,
-    Animator,
-    Queue,
-    Balloon,
     load,
+    agents: {},
 }
 
-export default clippy
+export type { Agent, Animator, Queue, Balloon };
+export default clippy;

@@ -24,7 +24,7 @@ npm install clippyts
 ```ts
 import clippy from 'clippyts'
 
-clippy.load('Merlin', (agent) => {
+clippy.load('Merlin', (agent: Agent) => {
     // do anything with the loaded agent
     agent.show();
 });

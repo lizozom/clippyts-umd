@@ -4,10 +4,12 @@ import { soundMp3 } from './sounds-mp3';
 import { soundOgg } from './sounds-ogg';
 import linksImg from './map.png';
 
-export const Links: AgentWrapper = {
+const Links: AgentWrapper = {
     name: 'Links',
     image: linksImg,
     config: agent,
     soundMp3,
     soundOgg,
 }
+
+export default Links;

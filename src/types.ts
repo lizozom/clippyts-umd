@@ -47,8 +47,7 @@ declare global {
     interface Window {
       clippy: {
         load: (name: string, data: any) => void;
-      } & {
-        [key in AgentType]: AgentWrapper;
+        agents: Record<AgentType, AgentWrapper>;
       }
     }
   }

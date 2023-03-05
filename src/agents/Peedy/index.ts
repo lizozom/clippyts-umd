@@ -4,10 +4,12 @@ import { soundMp3 } from './sounds-mp3';
 import { soundOgg } from './sounds-ogg';
 import peedyImg from './map.png';
 
-export const Peedy: AgentWrapper = {
+const Peedy: AgentWrapper = {
     name: 'Peedy',
     image: peedyImg,
     config: agent,
     soundMp3,
     soundOgg,
 }
+
+export default Peedy;
