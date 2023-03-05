@@ -1,7 +1,7 @@
 {
   "name": "clippyts",
   "version": "1.0.0",
-  "description": "Add Clippy or his friends to any website for instant nostalgia.",
+  "description": "Same old Clippy. Modern JavaScript.",
   "main": "dist/clippy.js",
   "web": "dist/clippy.js",
   "module": "dist/clippy.esm.js",
