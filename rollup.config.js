@@ -3,10 +3,10 @@ import path from 'path';
 import buble from '@rollup/plugin-buble';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import uglify from "@lopatnov/rollup-plugin-uglify";
 import image from '@rollup/plugin-image';
 import styles from "rollup-plugin-styles";
 import typescript from '@rollup/plugin-typescript';
+import terser from '@rollup/plugin-terser';
 
 const { dependencies } = require('./package.json');
 
@@ -35,6 +35,7 @@ const agentConfigs = getDirectories(agentDir).map(agent => {
                 dom: false,
                 include: /\.(png|jpg)$/,
             }),
+            terser(),
         ],
         output: [
             {
@@ -59,7 +60,7 @@ module.exports = [{
         buble(),
         nodeResolve(),
         commonjs(),
-        uglify()
+        terser(),
     ],
     output: [
         {
