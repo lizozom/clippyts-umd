@@ -1,11 +1,10 @@
-import $ from 'jquery'
 import { AgentConfig, AgentWrapper, ClippyAnimation, ClippyFrame } from './types';
 
 
 export default class Animator {
     public static States = { WAITING: 1, EXITED: 0 };
 
-    private _el: JQuery<HTMLElement>;
+    private _el: HTMLElement;
     private _data: AgentConfig;
     private _currentFrameIndex: number;
     private _path: string;
@@ -13,13 +12,13 @@ export default class Animator {
     private _currentFrame: ClippyFrame | undefined;
     private _started: boolean;
     private _sounds: Record<string, HTMLAudioElement>;
-    private _overlays: JQuery<HTMLElement>[];
+    private _overlays: HTMLElement[];
     private _endCallback: Function | undefined;
     private _currentAnimation: ClippyAnimation | undefined;
     private currentAnimationName: string | undefined;
     private _loop: number | undefined;
 
-    constructor (el: JQuery<HTMLElement>, config: AgentWrapper, sounds: Array<string>) {
+    constructor (el: HTMLElement, config: AgentWrapper, sounds: Array<string>) {
         this._el = el;
         this._data = config.config;
         this._path = config.image;
@@ -37,19 +36,21 @@ export default class Animator {
 
         this._setupElement(this._el);
         for (let i = 1; i < this._data.overlayCount; i++) {
-            let inner = this._setupElement($('<div></div>'));
+            const divEl = document.createElement('div');
+            let inner = this._setupElement(divEl);
             curr.append(inner);
             this._overlays.push(inner);
             curr = inner;
         }
     }
 
-    _setupElement (el: JQuery<HTMLElement>) {
+    _setupElement (el: HTMLElement) {
         let frameSize = this._data.framesize;
-        el.css('display', "none");
-        el.css({ width: frameSize[0], height: frameSize[1] });
-        el.css('background', "url('" + this._path + "') no-repeat");
-
+        el.style.display = "none";
+        el.style.width = frameSize[0] + "px";
+        el.style.height = frameSize[1] + "px";
+        el.style.background = "url('" + this._path + "') no-repeat";
+        
         return el;
     }
 
@@ -112,10 +113,11 @@ export default class Animator {
             if (i < images.length) {
                 let xy = images[i];
                 let bg = -xy[0] + 'px ' + -xy[1] + 'px';
-                this._overlays[i].css({ 'background-position': bg, 'display': 'block' });
+                this._overlays[i].style.backgroundPosition = bg;
+                this._overlays[i].style.display = 'block';
             }
             else {
-                this._overlays[i].css('display', 'none');
+                this._overlays[i].style.display = 'none';
             }
 
         }

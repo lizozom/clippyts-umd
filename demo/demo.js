@@ -1,40 +1,65 @@
-var availableAgents = ['Bonzi', 'Clippy', 'F1', 'Genie', 'Genius', 'Links', 'Merlin', 'Peedy', 'Rocky', 'Rover']
 
-var talks = [
-    'How can i help you?',
-    'Nice day!',
-    'Glad to meet you.',
-    'At your service',
-    'Helloo'
-]
+const ClippyDemo = (function() {
+    const availableAgents = ['Bonzi', 'Clippy', 'F1', 'Genie', 'Genius', 'Links', 'Merlin', 'Peedy', 'Rocky', 'Rover']
+    const talks = [
+        'How can i help you?',
+        'Nice day!',
+        'Glad to meet you.',
+        'At your service',
+        'Helloo'
+    ]
+    const randPos = () => .2 + Math.random() * .6
 
-const randPos = () => .2 + Math.random() * .6
+    let $el = undefined;
 
-function nextAgent () {
-    let agentName = availableAgents[Math.floor(Math.random() * (availableAgents.length))]
-    if (!agentName) return;
+    function init() {
+        this.$el = document.querySelector('.my-clippy')
+    }
 
-    clippy.load({
-            name: agentName, 
+    function nextAgent() {
+        let agentName = availableAgents[Math.floor(Math.random() * (availableAgents.length))]
+        if (!agentName) return;
+
+        clippy.load({
+            name: agentName,
             selector: ".my-clippy",
             successCb: agent => {
-            window[agentName] = agent
-            agent.show();
+                window[agentName] = agent
+                agent.show();
 
-            // Speak on click and start
-            const speak = () => {
-                agent.speak('I am ' + agentName + ', ' + talks[~~(Math.random() * talks.length)])
-                agent.animate()
+                // Speak on click and start
+                const speak = () => {
+                    agent.speak('I am ' + agentName + ', ' + talks[~~(Math.random() * talks.length)])
+                    agent.animate()
+                }
+                agent._el.addEventListener('click', () => speak());
+                speak()
+
+                // Animate randomly
+                setInterval(() => {
+                    agent.animate()
+                }, 3000 + (Math.random() * 4000))
             }
-            $(agent._el).on('click', () => speak())
-            speak()
+        });
+    } 
+    function destroy() {
+        this.$el.innerHTML = ''
+    }
 
-            // Animate randomly
-            setInterval(() => {
-                agent.animate()
-            }, 3000 + (Math.random() * 4000))
-        }
+    return {
+        init,
+        nextAgent,
+        destroy,
+
+    }
+})();
+
+
+window.onload = () => {
+    ClippyDemo.init();
+    ClippyDemo.nextAgent();
+    document.getElementById('next-agent').addEventListener('click', () => {
+        ClippyDemo.destroy();
+        ClippyDemo.nextAgent();
     });
 }
-
-nextAgent()

@@ -1,8 +1,8 @@
-import $ from 'jquery'
 import Queue from './queue'
 import Animator from './animator'
 import Balloon from './balloon'
 import { AgentWrapper } from './types';
+import { getHeight, getOffset, getWidth, getWindowScroll } from './utils';
 
 interface AgentOptions {
     agent: AgentWrapper;
@@ -11,7 +11,7 @@ interface AgentOptions {
 
 export default class Agent {
     private _queue: Queue;
-    private _el: JQuery<HTMLElement>;
+    private _el: HTMLElement;
     private _animator: any;
     private _balloon: Balloon;
     private _hidden: boolean = false;
@@ -31,12 +31,14 @@ export default class Agent {
 
         this._queue = new Queue(this._onQueueEmpty.bind(this));
 
-        this._el = $('<div class="clippy"></div>').hide();
+        const el = document.createElement('div');
+        el.className = 'clippy';
+        el.setAttribute('hidden', 'true');
+        this._el = el;
 
-        if (this._el.parent().length === 0) {
-            let el = selector ? $(selector)[0] : undefined;
-            $(el || document.body).append(this._el);
-        }
+        let selectorEl = selector ? document.getElementsByClassName(selector)[0] : undefined;
+        (selectorEl || document.body).appendChild(this._el);
+        
 
         this._animator = new Animator(this._el, agent, []);
         this._balloon = new Balloon(this._el);
@@ -67,7 +69,7 @@ export default class Agent {
         let el = this._el;
         this.stop();
         if (fast) {
-            this._el.hide();
+            this._el.setAttribute('hidden', 'true');
             this.stop();
             this.pause();
             if (callback) callback();
@@ -75,7 +77,7 @@ export default class Agent {
         }
 
         return this._playInternal('Hide',  () => {
-            el.hide();
+            this._el.setAttribute('hidden', 'true');
             this.pause();
             if (callback) callback();
         })
@@ -90,7 +92,8 @@ export default class Agent {
         this._addToQueue( (complete: Function) => {
             // the simple case
             if (duration === 0) {
-                this._el.css({ top: y, left: x });
+                this._el.style.top = y + 'px';
+                this._el.style.left = x + 'px';
                 this.reposition();
                 complete();
                 return;
@@ -98,8 +101,14 @@ export default class Agent {
 
             // no animations
             if (!this.hasAnimation(anim)) {
-                this._el.animate({ top: y, left: x }, duration, 'linear', () => {
+                const endHandler = () => {
+                    this._el.removeEventListener('animationend', endHandler);
                     complete();
+                }
+                this._el.addEventListener('animationend', endHandler);
+                this._el.animate({ top: y, left: x }, {
+                    duration,
+                    iterations: 1,
                 });
                 return;
             }
@@ -111,9 +120,15 @@ export default class Agent {
                 }
                 // if waiting,
                 if (state === Animator.States.WAITING) {
-                    this._el.animate({ top: y, left: x }, duration, () => {
-                        // after we're done with the movement, do the exit animation
-                        this._animator.exitAnimation();
+
+                    const endHandler = () => {
+                        this._el.removeEventListener('animationend', endHandler);
+                        this._animator.exitAnimation();;
+                    }
+                    this._el.addEventListener('animationend', endHandler);
+                    this._el.animate({ top: y, left: x }, {
+                        duration,
+                        iterations: 1,
                     });
                 }
 
@@ -175,16 +190,22 @@ export default class Agent {
 
         this._hidden = false;
         if (fast) {
-            this._el.show();
+            this._el.removeAttribute('hidden');
             this.resume();
             this._onQueueEmpty();
             return;
         }
 
-        if (this._el.css('top') === 'auto' || !(this._el.css('left') === 'auto')){
-            let left = $(window).width()! * 0.8;
-            let top = ($(window).height()! + $(document).scrollTop()!) * 0.8;
-            this._el.css({ top: top, left: left });
+        const cssTop = this._el.style.top;
+        const cssLeft = this._el.style.left;
+        if (cssTop === 'auto' || !(cssLeft === 'auto')){
+            let wW = document.querySelector('html')!.clientWidth; 
+            let wH = document.querySelector('html')!.clientHeight;
+            let {scrollLeft: sT} = getWindowScroll();
+            let left = wW * 0.8;
+            let top = (wH + sT) * 0.8;
+            this._el.style.top = top + 'px';
+            this._el.style.left = left + 'px';
         }
 
         this.resume();
@@ -276,9 +297,9 @@ export default class Agent {
      * @private
      */
     _getDirection (x: number, y: number) {
-        let offset = this._el.offset()!;
-        let h = this._el.height()!;
-        let w = this._el.width()!;
+        let offset = getOffset(this._el);
+        let h = getHeight(this._el, 'height')!;
+        let w = getWidth(this._el, 'width')!;
 
         let centerX = (offset.left + w / 2);
         let centerY = (offset.top + h / 2);
@@ -355,8 +376,8 @@ export default class Agent {
 
     _setupEvents () {
         window.addEventListener('resize', this.reposition.bind(this));
-        this._el.on('mousedown', this._onMouseDown.bind(this));
-        this._el.on('dblclick', this._onDoubleClick.bind(this));
+        this._el.addEventListener('mousedown', this._onMouseDown.bind(this));
+        this._el.addEventListener('dblclick', this._onDoubleClick.bind(this));
     }
 
     _onDoubleClick () {
@@ -366,15 +387,14 @@ export default class Agent {
     }
 
     reposition () {
-        if (!this._el.is(':visible')) return;
-        let o = this._el.offset()!;
-        let bH = this._el.outerHeight()!;
-        let bW = this._el.outerWidth()!;
+        if (!(this._el.getAttribute('hidden') === 'true')) return;
+        let o = getOffset(this._el);
+        let bH = getHeight(this._el, 'outer')!;
+        let bW = getWidth(this._el, 'outer')!; 
 
-        let wW = $(window).width()!;
-        let wH = $(window).height()!;
-        let sT = $(window).scrollTop()!;
-        let sL = $(window).scrollLeft()!;
+        let wW = document.querySelector('html')!.clientWidth; 
+        let wH = document.querySelector('html')!.clientHeight;
+        let {scrollLeft: sT, scrollTop: sL} = getWindowScroll();
 
         let top = o.top - sT;
         let left = o.left - sL;
@@ -391,12 +411,13 @@ export default class Agent {
             left = wW - bW - m;
         }
 
-        this._el.css({ left: left, top: top });
+        this._el.style.left = left + 'px';
+        this._el.style.top = top + 'px';
         // reposition balloon
         this._balloon.reposition();
     }
 
-    _onMouseDown (e: JQuery.MouseDownEvent) {
+    _onMouseDown (e: MouseEvent) {
         e.preventDefault();
         this._startDrag(e);
     }
@@ -404,7 +425,7 @@ export default class Agent {
 
     /**************************** Drag ************************************/
 
-    _startDrag (e: JQuery.MouseDownEvent) {
+    _startDrag (e: MouseEvent) {
         // pause animations
         this.pause();
         this._balloon.hide(true);
@@ -419,10 +440,10 @@ export default class Agent {
         this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
     }
 
-    _calculateClickOffset (e: JQuery.MouseDownEvent) {
+    _calculateClickOffset (e: MouseEvent) {
         let mouseX = e.pageX;
         let mouseY = e.pageY;
-        let o = this._el.offset()!;
+        let o = getOffset(this._el);
         return {
             top: mouseY - o.top,
             left: mouseX - o.left
@@ -431,8 +452,8 @@ export default class Agent {
     }
 
     _updateLocation () {
-        this._el.css('top', this._targetY || 0);
-        this._el.css('left', this._targetX || 0);
+        this._el.style.top = (this._targetY || 0) + 'px';
+        this._el.style.left = (this._targetX || 0) + 'px';
         this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
     }
 

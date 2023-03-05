@@ -1,9 +1,8 @@
-import $ from 'jquery'
-
+import { getHeight, getOffset, getWidth, getWindowScroll } from './utils';
 export default class Balloon {
-    private _targetEl: JQuery<HTMLElement>;
-    private _balloon: JQuery<HTMLElement> | undefined;
-    private _content: JQuery<HTMLElement> | undefined;
+    private _targetEl: HTMLElement;
+    private _balloon: HTMLElement | undefined;
+    private _content: HTMLElement | undefined;
     private _complete: Function | undefined;
 
     private _hiding: number | null = null;
@@ -18,7 +17,7 @@ export default class Balloon {
     private _BALLOON_MARGIN: number;
     private _addWord: (() => void) | null = null;
     
-    constructor (targetEl: JQuery<HTMLElement>) {
+    constructor (targetEl: HTMLElement) {
         this._targetEl = targetEl;
 
         this._hidden = true;
@@ -29,11 +28,20 @@ export default class Balloon {
     }
 
     _setup () {
+        const balloonEl = document.createElement('div');
+        balloonEl.className = 'clippy-balloon';
+        balloonEl.setAttribute('hidden', 'true')
+        const tipEl = document.createElement('div');
+        tipEl.className = 'clippy-tip';
+        const contentEl = document.createElement('div');
+        contentEl.className = 'clippy-content';
+        balloonEl.appendChild(tipEl);
+        balloonEl.appendChild(contentEl);
+        this._balloon = balloonEl;
+        this._content = contentEl;
 
-        this._balloon = $('<div class="clippy-balloon"><div class="clippy-tip"></div><div class="clippy-content"></div></div> ').hide();
-        this._content = this._balloon.find('.clippy-content');
-
-        this._balloon.insertAfter('.clippy');
+        const targetEl = this._targetEl;
+        targetEl.insertAdjacentElement('afterend', balloonEl);
     }
 
     reposition () {
@@ -54,22 +62,24 @@ export default class Balloon {
     _position (side: string) {
         if (!this._balloon) return;
 
-        let o = this._targetEl.offset()!;
-        let h = this._targetEl.height()!;
-        let w = this._targetEl.width()!;
+        let o = getOffset(this._targetEl);
+        let h = getHeight(this._targetEl, 'height')!;
+        let w = getWidth(this._targetEl, 'width')!;
 
-        o.top -= $(window).scrollTop()!;
-        o.left -= $(window).scrollLeft()!;
 
-        let bH = this._balloon.outerHeight()!;
-        let bW = this._balloon.outerWidth()!;
+        let {scrollLeft: sT, scrollTop: sL} = getWindowScroll();
+        o.top -= sT;
+        o.left -= sL;
 
-        this._balloon.removeClass('clippy-top-left');
-        this._balloon.removeClass('clippy-top-right');
-        this._balloon.removeClass('clippy-bottom-right');
-        this._balloon.removeClass('clippy-bottom-left');
+        let bH = getHeight(this._balloon, 'outer')!;
+        let bW = getWidth(this._balloon, 'outer')!; 
+        
+        this._balloon.classList.remove('clippy-top-left');
+        this._balloon.classList.remove('clippy-top-right');
+        this._balloon.classList.remove('clippy-bottom-right');
+        this._balloon.classList.remove('clippy-bottom-left');
 
-        let left, top;
+        let left = 0, top = 0;
         switch (side) {
             case 'top-left':
                 // right side of the balloon next to the right side of the agent
@@ -93,22 +103,21 @@ export default class Balloon {
                 break;
         }
 
-        this._balloon.css('top', top || '');
-        this._balloon.css('left', left || '');
-        this._balloon.addClass('clippy-' + side);
+        this._balloon.style.top = top + 'px';
+        this._balloon.style.left = left + 'px';
+        this._balloon.classList.add('clippy-' + side);
     }
 
     _isOut () {
         if (!this._balloon) return;
         
-        let o = this._balloon.offset()!;
-        let bH = this._balloon.outerHeight()!;
-        let bW = this._balloon.outerWidth()!;
+        let o = getOffset(this._balloon);
+        let bH = getHeight(this._balloon, 'outer')!;
+        let bW = getWidth(this._balloon, 'outer')!; 
 
-        let wW = $(window).width()!;
-        let wH = $(window).height()!;
-        let sT = $(document).scrollTop()!;
-        let sL = $(document).scrollLeft()!;
+        let wW = document.querySelector('html')!.clientWidth; 
+        let wH = document.querySelector('html')!.clientHeight;
+        let {scrollLeft: sT, scrollTop: sL} = getWindowScroll();
 
         let top = o.top - sT;
         let left = o.left - sL;
@@ -125,14 +134,16 @@ export default class Balloon {
         if (!c) return;
         
         // set height to auto
-        c.height('auto');
-        c.width('auto');
+        c.style.height = 'auto';
+        c.style.width = 'auto';
+
         // add the text
-        c.text(text);
+        c.innerHTML = text;
+        
         // set height
-        c.height(c.height() || 0);
-        c.width(c.width() || 0);
-        c.text('');
+        c.style.height = c.style.height || '';
+        c.style.width = c.style.width || '';
+        c.innerHTML = '';
         this.reposition();
 
         this._complete = complete;
@@ -142,12 +153,12 @@ export default class Balloon {
     show () {
         if (!this._balloon) return;
         if (this._hidden) return;
-        this._balloon.show();
+        this._balloon.removeAttribute('hidden');
     }
 
     hide (fast?: boolean) {
         if (fast) {
-            this._balloon?.hide();
+            this._balloon?.setAttribute('hidden', 'true');
             return;
         }
 
@@ -156,7 +167,7 @@ export default class Balloon {
 
     _finishHideBalloon () {
         if (this._active) return;
-        this._balloon?.hide();
+        this._balloon?.setAttribute('hidden', 'true');
         this._hidden = true;
         this._hiding = null;
     }
@@ -180,7 +191,7 @@ export default class Balloon {
                     this.hide(false);
                 }
             } else {
-                el?.text(words.slice(0, idx).join(' '));
+                if (el) el.innerHTML = words.slice(0, idx).join(' ');
                 idx++;
                 // @ts-ignore
                 this._loop = window.setTimeout(this._addWord?.bind(this), time);

@@ -1,11 +1,9 @@
-import $ from 'jquery'
-
 export default class Queue {
     private _queue: Function[];
     private _onEmptyCallback: any;
     private _active: any;
 
-    constructor (onEmptyCallback: Function) {
+    constructor(onEmptyCallback: Function) {
         this._queue = [];
         this._onEmptyCallback = onEmptyCallback;
     }
@@ -15,7 +13,7 @@ export default class Queue {
      * @param {function(Function)} func
      * @returns {jQuery.Deferred}
      */
-    queue (func: Function) {
+    queue(func: Function) {
         this._queue.push(func);
 
         if (this._queue.length === 1 && !this._active) {
@@ -23,7 +21,7 @@ export default class Queue {
         }
     }
 
-    _progressQueue () {
+    _progressQueue() {
 
         // stop if nothing left in queue
         if (!this._queue.length) {
@@ -39,11 +37,11 @@ export default class Queue {
         if (f) f(completeFunction);
     }
 
-    clear () {
+    clear() {
         this._queue = [];
     }
 
-    next () {
+    next() {
         this._active = false;
         this._progressQueue();
     }

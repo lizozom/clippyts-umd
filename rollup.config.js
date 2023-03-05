@@ -27,7 +27,6 @@ const getDirectories = source =>
 const agentDir = path.resolve(__dirname, 'src/agents');
 const agentConfigs = getDirectories(agentDir).map(agent => {
     console.log("agent: " + agent, agentDir);
-    const agentPath = path.resolve(agentDir, agent);
     return {
         input: `${agentDir}/${agent}/index.ts`,
         plugins: [
@@ -50,6 +49,8 @@ const agentConfigs = getDirectories(agentDir).map(agent => {
     }
 });
 
+
+
 module.exports = [{
     input: 'src/index.ts',
     external: Object.keys(dependencies),
@@ -67,19 +68,13 @@ module.exports = [{
             format: 'umd',
             name: name,
             sourcemap: true,
-            globals: {
-                jquery: '$'
-            }
-
         },
         {
             format: 'es',
             file: dist + '/' + name + '.esm.js',
             sourcemap: true,
-            globals: {
-                jquery: '$'
-            }
         },
     ]
 },
-...agentConfigs];
+...agentConfigs
+];
