@@ -2,22 +2,11 @@ import { AgentType } from '../types';
 
 function loadAgent (name: AgentType) {
     return new Promise<any>((resolve, reject) => {
-        if (window.clippy.agents[name] !== undefined) {
-            resolve(window.clippy.agents[name]);
-        } else {
-            const scr = document.createElement('script');
-            scr.src = `./dist/agents/${name}.js`;
-            scr.onload= () => {
-                console.log(`Loaded ${name} agent`);
-                resolve(window.clippy.agents[name]);
-            };
-            scr.onerror = () => {
-                console.error(`Failed to load ${name} agent`);
-                reject();
-            };
-        
-            document.body.appendChild(scr);
-        }
+        import(`./agents/${name}.js`).then(module => {
+            resolve(module.default);
+        }).catch(err => {
+            reject(err);
+        });
     });
 }
 

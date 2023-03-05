@@ -25,56 +25,44 @@ const getDirectories = source =>
 
 // prepare agent configs
 const agentDir = path.resolve(__dirname, 'src/agents');
-const agentConfigs = getDirectories(agentDir).map(agent => {
-    console.log("agent: " + agent, agentDir);
+
+const agentInputs = getDirectories(agentDir).map(agent => {
     return {
-        input: `${agentDir}/${agent}/index.ts`,
-        plugins: [
-            typescript(),
-            image({
-                dom: false,
-                include: /\.(png|jpg)$/,
-            }),
-            terser(),
-        ],
-        output: [
-            {
-                file: dist + `/agents/${agent}.js`,
-                format: 'iife',
-                name: `${name}.agents.${agent}`,
-                sourcemap: false,
-            },
-
-        ]
+        [`agents/${agent}`]: `${agentDir}/${agent}/index.ts`, 
     }
-});
+}).reduce((acc, cur) => {
+    return {...acc, ...cur}
+}, {});
 
-
+console.log(agentInputs)
 
 module.exports = [{
-    input: 'src/index.ts',
+    input: {
+        clippy: 'src/index.ts',
+        ...agentInputs
+    },
     external: Object.keys(dependencies),
     plugins: [
         typescript(),
         styles(),
         buble(),
-        nodeResolve(),
+        nodeResolve({
+            browser: true,
+        }),
+        image({
+            dom: false,
+            include: /\.(png|jpg)$/,
+        }),
         commonjs(),
-        terser(),
+        // terser(),
     ],
     output: [
         {
-            file: dist + '/' + name + '.js',
-            format: 'umd',
-            name: name,
-            sourcemap: true,
-        },
-        {
+            dir: dist,
             format: 'es',
-            file: dist + '/' + name + '.esm.js',
             sourcemap: true,
         },
     ]
 },
-...agentConfigs
+// ...agentConfigs
 ];

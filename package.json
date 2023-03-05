@@ -4,8 +4,8 @@
   "description": "Same old Clippy. Modern JavaScript.",
   "main": "dist/clippy.js",
   "web": "dist/clippy.js",
-  "module": "dist/clippy.esm.js",
-  "jsnext:main": "dist/clippy.esm.js",
+  "module": "dist/clippy.js",
+  "jsnext:main": "dist/clippy.js",
   "scripts": {
     "increase-mem": "export NODE_OPTIONS=--max_old_space_size=4096",
     "build-js": "rollup -c rollup.config.js",
@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/lizozom/clippyts#readme",
   "dependencies": {
-    "jquery": "^3.6.3"
   },
   "devDependencies": {
     "@lopatnov/rollup-plugin-uglify": "^2.1.5",

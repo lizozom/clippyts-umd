@@ -9,14 +9,15 @@ export default class Animator {
     private _currentFrameIndex: number;
     private _path: string;
     private _exiting: boolean;
-    private _currentFrame: ClippyFrame | undefined;
+    private _currentFrame?: ClippyFrame;
     private _started: boolean;
     private _sounds: Record<string, HTMLAudioElement>;
     private _overlays: HTMLElement[];
-    private _endCallback: Function | undefined;
-    private _currentAnimation: ClippyAnimation | undefined;
-    private currentAnimationName: string | undefined;
-    private _loop: number | undefined;
+    private _endCallback?: Function;
+    private _currentAnimation?: ClippyAnimation;
+    private _loop?: number;
+
+    public currentAnimationName: string | undefined;
 
     constructor (el: HTMLElement, config: AgentWrapper, sounds: Array<string>) {
         this._el = el;

@@ -9,19 +9,32 @@ export interface AgentOptions {
     selector?: string;
 }
 
+class Deferred {
+    public promise!: Promise<void>;
+    public resolve!: (value?: any) => void;
+    public reject!: (reason?: any) => void;
+
+    constructor () {
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
+    }
+}
+
 export default class Agent {
     private _queue: Queue;
     private _el: HTMLElement;
-    private _animator: any;
+    private _animator: Animator;
     private _balloon: Balloon;
     private _hidden: boolean = false;
-    private _idleDfd: any;
+    private _idleDfd?: Deferred;
     private _offset: { top: number; left: number; } = { top: 0, left: 0 };
-    private _dragUpdateLoop: number | undefined;
-    private _targetX: number | undefined;
-    private _targetY: number | undefined;
-    private _moveHandle: ((e: MouseEvent) => void) | undefined; 
-    private _upHandle: ((e: MouseEvent) => void) | undefined; 
+    private _dragUpdateLoop?: number;
+    private _targetX?: number;
+    private _targetY?: number;
+    private _moveHandle?: ((e: MouseEvent) => void); 
+    private _upHandle?: ((e: MouseEvent) => void); 
 
     constructor (options: AgentOptions) {
         const {
@@ -141,8 +154,8 @@ export default class Agent {
     _playInternal (animation: any, callback: Function) {
 
         // if we're inside an idle animation,
-        if (this._isIdleAnimation() && this._idleDfd && this._idleDfd.state() === 'pending') {
-            this._idleDfd.done(() => {
+        if (this._isIdleAnimation() && this._idleDfd) {
+            this._idleDfd.promise.finally(() => {
                 this._playInternal(animation, callback);
             })
         }
@@ -275,7 +288,7 @@ export default class Agent {
 
     /***
      * Play a random animation
-     * @return {jQuery.Deferred}
+     * @return {Deferred}
      */
     animate (): any {
         let animations = this.animations();
@@ -330,14 +343,14 @@ export default class Agent {
     _onQueueEmpty () {
         if (this._hidden || this._isIdleAnimation()) return;
         let idleAnim = this._getIdleAnimation();
-        this._idleDfd = $.Deferred();
+        this._idleDfd = new Deferred();
 
         this._animator.showAnimation(idleAnim, this._onIdleComplete.bind(this));
     }
 
     _onIdleComplete (name: string, state: number) {
         if (state === Animator.States.EXITED) {
-            this._idleDfd.resolve();
+            this._idleDfd?.resolve(undefined);
         }
     }
 

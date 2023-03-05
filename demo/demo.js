@@ -1,4 +1,6 @@
 
+import clippy from '../dist/clippy.js'
+
 const ClippyDemo = (function() {
     const availableAgents = ['Bonzi', 'Clippy', 'F1', 'Genie', 'Genius', 'Links', 'Merlin', 'Peedy', 'Rocky', 'Rover']
     const talks = [
