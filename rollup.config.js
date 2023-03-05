@@ -54,7 +54,7 @@ module.exports = [{
             include: /\.(png|jpg)$/,
         }),
         commonjs(),
-        // terser(),
+        terser(),
     ],
     output: [
         {
@@ -64,5 +64,4 @@ module.exports = [{
         },
     ]
 },
-// ...agentConfigs
 ];
