@@ -2,7 +2,7 @@ import Agent from './agent'
 import Animator from './animator'
 import Queue from './queue'
 import Balloon from './balloon'
-import { load, ready } from './load'
+import { load } from './load'
 
 const clippy = {
     Agent,
@@ -10,7 +10,6 @@ const clippy = {
     Queue,
     Balloon,
     load,
-    ready
 }
 
 export default clippy

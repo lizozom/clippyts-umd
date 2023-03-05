@@ -40,3 +40,15 @@ export interface AgentWrapper {
     soundMp3: Record<string, string>;
     soundOgg: Record<string, string>;
 }
+
+export type AgentType = 'Clippy' | 'Bonzi' | 'F1' | 'Genie' | 'Genius' | 'Links' | 'Merlin' | 'Peedy' | 'Rocky' | 'Rover';
+
+declare global {
+    interface Window {
+      clippy: {
+        load: (name: string, data: any) => void;
+      } & {
+        [key in AgentType]: AgentWrapper;
+      }
+    }
+  }

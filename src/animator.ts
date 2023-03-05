@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { AgentConfig, ClippyAnimation, ClippyFrame } from './types';
+import { AgentConfig, AgentWrapper, ClippyAnimation, ClippyFrame } from './types';
 
 
 export default class Animator {
@@ -19,10 +19,10 @@ export default class Animator {
     private currentAnimationName: string | undefined;
     private _loop: number | undefined;
 
-    constructor (el: JQuery<HTMLElement>, path: string, data: AgentConfig, sounds: Array<string>) {
+    constructor (el: JQuery<HTMLElement>, config: AgentWrapper, sounds: Array<string>) {
         this._el = el;
-        this._data = data;
-        this._path = path;
+        this._data = config.config;
+        this._path = config.image;
         this._currentFrameIndex = 0;
         this._currentFrame = undefined;
         this._exiting = false;
@@ -48,7 +48,7 @@ export default class Animator {
         let frameSize = this._data.framesize;
         el.css('display', "none");
         el.css({ width: frameSize[0], height: frameSize[1] });
-        el.css('background', "url('" + this._path + "/map.png') no-repeat");
+        el.css('background', "url('" + this._path + "') no-repeat");
 
         return el;
     }

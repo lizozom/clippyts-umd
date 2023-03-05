@@ -5,7 +5,6 @@ import Balloon from './balloon'
 import { AgentWrapper } from './types';
 
 interface AgentOptions {
-    path: string;
     agent: AgentWrapper;
     selector?: string;
 }
@@ -26,7 +25,6 @@ export default class Agent {
 
     constructor (options: AgentOptions) {
         const {
-            path, 
             agent,
             selector
         } = options;
@@ -40,10 +38,8 @@ export default class Agent {
             $(el || document.body).append(this._el);
         }
 
-        this._animator = new Animator(this._el, path, agent.config, []);
-
+        this._animator = new Animator(this._el, agent, []);
         this._balloon = new Balloon(this._el);
-
         this._setupEvents();
     }
 
@@ -358,7 +354,7 @@ export default class Agent {
     /**************************** Events ************************************/
 
     _setupEvents () {
-        $(window).on('resize', this.reposition.bind(this));
+        window.addEventListener('resize', this.reposition.bind(this));
         this._el.on('mousedown', this._onMouseDown.bind(this));
         this._el.on('dblclick', this._onDoubleClick.bind(this));
     }
