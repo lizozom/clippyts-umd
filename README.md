@@ -63,7 +63,7 @@ agent.stop();
 # Licence
 MIT
 
-[![FOSSA Status](https://app.fossa.com/projects/git%2Bgithub.com%2Flizozom%2Fclippyts?utm_source=share_link)](https://app.fossa.com/projects/git%2Bgithub.com%2Flizozom%2Fclippyts?utm_source=share_link)
+[FOSSA Status](https://app.fossa.com/projects/git%2Bgithub.com%2Flizozom%2Fclippyts?utm_source=share_link)
 
 ## Special Thanks
 - [pi0 for the original clippyJS implementation](https://github.com/pi0/clippyjs)
