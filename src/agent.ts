@@ -138,7 +138,7 @@ export default class Agent {
         }, this);
     }
 
-    _playInternal (animation: any, callback: Function) {
+    private _playInternal (animation: any, callback: Function) {
 
         // if we're inside an idle animation,
         if (this._isIdleAnimation() && this._idleDfd) {
