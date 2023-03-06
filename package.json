@@ -1,6 +1,6 @@
 {
   "name": "clippyts",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Same old Clippy. Modern JavaScript.",
   "main": "dist/index.js",
   "web": "dist/index.js",

@@ -216,7 +216,7 @@ export default class Agent {
      *
      * @param {String} text
      */
-    speak (text: string, hold: boolean = true) {
+    speak (text: string, hold: boolean = false) {
         this._addToQueue( (complete: Function) => {
             this._balloon.speak(complete, text, hold);
         }, this);
