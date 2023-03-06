@@ -186,7 +186,7 @@ export default class Agent {
      *
      * @param {Boolean=} fast
      */
-    show (fast: boolean) {
+    show (fast: boolean = true) {
 
         this._hidden = false;
         if (fast) {
@@ -216,7 +216,7 @@ export default class Agent {
      *
      * @param {String} text
      */
-    speak (text: string, hold: boolean) {
+    speak (text: string, hold: boolean = true) {
         this._addToQueue( (complete: Function) => {
             this._balloon.speak(complete, text, hold);
         }, this);
