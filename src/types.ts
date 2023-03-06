@@ -46,7 +46,7 @@ export interface ClippySound {
 }
 
 export interface LoadOptions {
-    name: string;
+    name: AgentType;
     successCb?: (agent: Agent) => void;
     failCb?: (error: any) => void;
     selector?: string;

@@ -1,4 +1,4 @@
-import fs, { readdirSync } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import buble from '@rollup/plugin-buble';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
@@ -18,28 +18,9 @@ if (!fs.existsSync(dist)) {
     fs.mkdirSync(dist);
 }
 
-const getDirectories = source =>
-    readdirSync(source, { withFileTypes: true })
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => dirent.name)
-
-// prepare agent configs
-const agentDir = path.resolve(__dirname, 'src/agents');
-
-const agentInputs = getDirectories(agentDir).map(agent => {
-    return {
-        [`agents/${agent}`]: `${agentDir}/${agent}/index.ts`, 
-    }
-}).reduce((acc, cur) => {
-    return {...acc, ...cur}
-}, {});
-
-console.log(agentInputs)
-
 module.exports = [{
     input: {
         index: 'src/index.ts',
-        ...agentInputs
     },
     external: Object.keys(dependencies),
     plugins: [
@@ -58,8 +39,10 @@ module.exports = [{
     ],
     output: [
         {
-            dir: dist,
-            format: 'es',
+            
+            name: 'clippy',
+            dir: 'dist',
+            format: 'umd',
             sourcemap: true,
         },
     ]

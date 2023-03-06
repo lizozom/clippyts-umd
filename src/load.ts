@@ -11,14 +11,10 @@ export const load = (options: LoadOptions) => {
     } = options || {};
 
     // wrapper to the success callback
-    agents[name]().then((agentConfig: AgentWrapper) => {
-        const a = new Agent({
-            agent: agentConfig,
-            selector
-        });
-        if (successCb) successCb(a);
-    }).catch((error: any) => {
-        if (failCb) failCb(error);
+    const agentConfig = agents[name];
+    const a = new Agent({
+        agent: agentConfig,
+        selector
     });
-
+    if (successCb) successCb(a);
 }
