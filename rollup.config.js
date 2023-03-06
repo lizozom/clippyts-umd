@@ -38,7 +38,7 @@ console.log(agentInputs)
 
 module.exports = [{
     input: {
-        clippy: 'src/index.ts',
+        index: 'src/index.ts',
         ...agentInputs
     },
     external: Object.keys(dependencies),

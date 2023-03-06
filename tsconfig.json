@@ -6,7 +6,7 @@
       "DOM"
     ], /* Specify a set of bundled library declaration files that describe the target runtime environment. */
     "module": "esnext", /* Specify what module code is generated. */
-    "rootDir": "./", /* Specify the root folder within your source files. */
+    "rootDir": "./src", /* Specify the root folder within your source files. */
     "moduleResolution": "node", /* Specify how TypeScript looks up a file from a given module specifier. */
     "outDir": "./dist", /* Specify an output folder for all emitted files. */
     "noEmitOnError": true, /* Disable emitting files if any type checking errors are reported. */
@@ -16,10 +16,11 @@
     "strict": true, /* Enable all strict type-checking options. */
     "skipLibCheck": true, /* Skip type checking all .d.ts files. */
     "declaration": true, /* Generates corresponding '.d.ts' file. */
+    // "declarationDir": "./dist", /* Output directory for generated declaration files. */
+    "declarationMap": true,
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.css",
-    "globals.d.ts",
   ]
 }

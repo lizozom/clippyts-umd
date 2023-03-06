@@ -1,5 +1,5 @@
 
-import clippy from '../dist/clippy.js'
+import clippy from '../dist/index.js'
 
 const ClippyDemo = (function() {
     const availableAgents = ['Bonzi', 'Clippy', 'F1', 'Genie', 'Genius', 'Links', 'Merlin', 'Peedy', 'Rocky', 'Rover']
