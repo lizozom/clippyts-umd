@@ -5,8 +5,7 @@
 
 Please be patient for first load. It may take some time as agents are loaded one by one.
 
-- [Simple JSFiddle](https://jsfiddle.net/pi0/rtw8p05k)
-- [Agents Zoo](https://pi0.github.io/clippyjs/demo/index.html) 
+- [Simple JSFiddle](https://jsfiddle.net/lizozomi/n5yz3jeb/23/)
 
 ![clippy-agents](https://user-images.githubusercontent.com/3016806/223058578-e4123bc3-0f4b-4913-a15d-d04e8be04525.png)
 
