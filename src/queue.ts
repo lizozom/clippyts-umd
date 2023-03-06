@@ -13,7 +13,7 @@ export default class Queue {
      * @param {function(Function)} func
      * @returns {jQuery.Deferred}
      */
-    queue(func: Function) {
+    public queue(func: Function) {
         this._queue.push(func);
 
         if (this._queue.length === 1 && !this._active) {
@@ -21,7 +21,7 @@ export default class Queue {
         }
     }
 
-    _progressQueue() {
+    private _progressQueue() {
 
         // stop if nothing left in queue
         if (!this._queue.length) {
@@ -37,11 +37,11 @@ export default class Queue {
         if (f) f(completeFunction);
     }
 
-    clear() {
+    public clear() {
         this._queue = [];
     }
 
-    next() {
+    public next() {
         this._active = false;
         this._progressQueue();
     }

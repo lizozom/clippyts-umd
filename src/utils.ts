@@ -50,3 +50,18 @@ export function getHeight(el: HTMLElement, type: 'inner' | 'outer' | 'height' | 
         return el.offsetHeight + parseInt(s.getPropertyValue('margin-top')) + parseInt(s.getPropertyValue('margin-bottom'));
     return null;
 }
+
+
+// Stub for jQuery.Deferred
+export class Deferred {
+    public promise!: Promise<void>;
+    public resolve!: (value?: any) => void;
+    public reject!: (reason?: any) => void;
+
+    constructor () {
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
+    }
+}

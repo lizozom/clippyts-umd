@@ -45,7 +45,7 @@ export default class Animator {
         }
     }
 
-    _setupElement (el: HTMLElement) {
+    private _setupElement (el: HTMLElement) {
         let frameSize = this._data.framesize;
         el.style.display = "none";
         el.style.width = frameSize[0] + "px";
@@ -106,7 +106,7 @@ export default class Animator {
         return true;
     }
 
-    _draw () {
+    private _draw () {
         let images: Array<Array<number>> = [];
         if (this._currentFrame) images = this._currentFrame.images || [];
 
@@ -124,7 +124,7 @@ export default class Animator {
         }
     }
 
-    _getNextAnimationFrame (): number {
+    private _getNextAnimationFrame (): number {
         if (!this._currentAnimation) return 0;
         // No current frame. start animation.
         if (!this._currentFrame) return 0;
@@ -151,20 +151,20 @@ export default class Animator {
     }
 
 
-    _playSound () {
+    private _playSound () {
         let s = this._currentFrame?.sound;
         if (!s) return;
         let audio = this._sounds[s];
         if (audio) audio.play();
     }
 
-    _atLastFrame () {
+    private _atLastFrame () {
         if (!this._currentAnimation) return false;
         return this._currentFrameIndex >= this._currentAnimation.frames.length - 1;
     }
 
 
-    _step () {
+    private _step () {
         if (!this._currentAnimation) return;
         let newFrameIndex = Math.min(this._getNextAnimationFrame(), this._currentAnimation.frames.length - 1);
         let frameChanged = !this._currentFrame || this._currentFrameIndex !== newFrameIndex;

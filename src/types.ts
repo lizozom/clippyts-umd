@@ -1,9 +1,21 @@
+import type Agent from './agent'
+
+export type AgentType = 'Clippy' | 'Bonzi' | 'F1' | 'Genie' | 'Genius' | 'Links' | 'Merlin' | 'Peedy' | 'Rocky' | 'Rover';
 export interface AgentConfig {
     overlayCount: number;
     framesize: Array<number>;
     sounds: Array<string>;
     animations: Record<string, ClippyAnimation>;
 }
+
+export interface AgentWrapper {
+    name: string;
+    image: string;
+    config: AgentConfig;
+    soundMp3: Record<string, string>;
+    soundOgg: Record<string, string>;
+}
+
 
 export interface ClippyBranch {
     branches?: Array<string>;
@@ -33,21 +45,20 @@ export interface ClippySound {
     data: string;
 }
 
-export interface AgentWrapper {
+export interface LoadOptions {
     name: string;
-    image: string;
-    config: AgentConfig;
-    soundMp3: Record<string, string>;
-    soundOgg: Record<string, string>;
+    successCb?: (agent: Agent) => void;
+    failCb?: (error: any) => void;
+    selector?: string;
 }
 
-export type AgentType = 'Clippy' | 'Bonzi' | 'F1' | 'Genie' | 'Genius' | 'Links' | 'Merlin' | 'Peedy' | 'Rocky' | 'Rover';
+export interface Clippy {
+    load: (data: LoadOptions) => void;
+    agents: Record<AgentType, AgentWrapper>;
+}
 
 declare global {
     interface Window {
-      clippy: {
-        load: (name: string, data: any) => void;
-        agents: Record<AgentType, AgentWrapper>;
-      }
+        clippy: Clippy
     }
-  }
+}

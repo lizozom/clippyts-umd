@@ -3,10 +3,12 @@ import type Animator from './animator'
 import type Queue from './queue'
 import type Balloon from './balloon'
 import { load } from './load'
+import { AgentType, AgentWrapper, Clippy } from './types'
+import "./clippy.css";
 
-const clippy = {
+const clippy: Clippy = {
     load,
-    agents: {},
+    agents: {} as Record<AgentType, AgentWrapper>,
 }
 
 export type { Agent, Animator, Queue, Balloon };

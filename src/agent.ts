@@ -2,24 +2,11 @@ import Queue from './queue'
 import Animator from './animator'
 import Balloon from './balloon'
 import { AgentWrapper } from './types';
-import { getHeight, getOffset, getWidth, getWindowScroll } from './utils';
+import { Deferred, getHeight, getOffset, getWidth, getWindowScroll } from './utils';
 
 export interface AgentOptions {
     agent: AgentWrapper;
     selector?: string;
-}
-
-class Deferred {
-    public promise!: Promise<void>;
-    public resolve!: (value?: any) => void;
-    public reject!: (reason?: any) => void;
-
-    constructor () {
-        this.promise = new Promise((resolve, reject) => {
-            this.resolve = resolve;
-            this.reject = reject;
-        });
-    }
 }
 
 export default class Agent {
@@ -309,7 +296,7 @@ export default class Agent {
      * @return {String}
      * @private
      */
-    _getDirection (x: number, y: number) {
+    private _getDirection (x: number, y: number) {
         let offset = getOffset(this._el);
         let h = getHeight(this._el, 'height')!;
         let w = getWidth(this._el, 'width')!;
@@ -340,7 +327,7 @@ export default class Agent {
      * We need to transition the animation to an idle state
      * @private
      */
-    _onQueueEmpty () {
+    private _onQueueEmpty () {
         if (this._hidden || this._isIdleAnimation()) return;
         let idleAnim = this._getIdleAnimation();
         this._idleDfd = new Deferred();
@@ -348,7 +335,7 @@ export default class Agent {
         this._animator.showAnimation(idleAnim, this._onIdleComplete.bind(this));
     }
 
-    _onIdleComplete (name: string, state: number) {
+    private _onIdleComplete (name: string, state: number) {
         if (state === Animator.States.EXITED) {
             this._idleDfd?.resolve(undefined);
         }
@@ -359,7 +346,7 @@ export default class Agent {
      * @return {Boolean}
      * @private
      */
-    _isIdleAnimation () {
+    private _isIdleAnimation () {
         let c = this._animator.currentAnimationName;
         return c && c.indexOf('Idle') === 0;
     }
@@ -370,7 +357,7 @@ export default class Agent {
      * @return {String}
      * @private
      */
-    _getIdleAnimation () {
+    private _getIdleAnimation () {
         let animations = this.animations();
         let r = [];
         for (let i = 0; i < animations.length; i++) {
@@ -387,13 +374,13 @@ export default class Agent {
 
     /**************************** Events ************************************/
 
-    _setupEvents () {
+    private _setupEvents () {
         window.addEventListener('resize', this.reposition.bind(this));
         this._el.addEventListener('mousedown', this._onMouseDown.bind(this));
         this._el.addEventListener('dblclick', this._onDoubleClick.bind(this));
     }
 
-    _onDoubleClick () {
+    private _onDoubleClick () {
         if (!this.play('ClickedOn')) {
             this.animate();
         }
@@ -430,7 +417,7 @@ export default class Agent {
         this._balloon.reposition();
     }
 
-    _onMouseDown (e: MouseEvent) {
+    private _onMouseDown (e: MouseEvent) {
         e.preventDefault();
         this._startDrag(e);
     }
@@ -438,7 +425,7 @@ export default class Agent {
 
     /**************************** Drag ************************************/
 
-    _startDrag (e: MouseEvent) {
+    private _startDrag (e: MouseEvent) {
         // pause animations
         this.pause();
         this._balloon.hide(true);
@@ -453,7 +440,7 @@ export default class Agent {
         this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
     }
 
-    _calculateClickOffset (e: MouseEvent) {
+    private _calculateClickOffset (e: MouseEvent) {
         let mouseX = e.pageX;
         let mouseY = e.pageY;
         let o = getOffset(this._el);
@@ -464,13 +451,13 @@ export default class Agent {
 
     }
 
-    _updateLocation () {
+    private _updateLocation () {
         this._el.style.top = (this._targetY || 0) + 'px';
         this._el.style.left = (this._targetX || 0) + 'px';
         this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
     }
 
-    _dragMove (e: MouseEvent) {
+    private _dragMove (e: MouseEvent) {
         e.preventDefault();
         let x = e.clientX - this._offset.left;
         let y = e.clientY - this._offset.top;
@@ -478,7 +465,7 @@ export default class Agent {
         this._targetY = y;
     }
 
-    _finishDrag () {
+    private _finishDrag () {
         window.clearTimeout(this._dragUpdateLoop);
         // remove handles
         if (this._moveHandle) {
@@ -494,7 +481,7 @@ export default class Agent {
 
     }
 
-    _addToQueue (func: Function, scope?: any) {
+    private _addToQueue (func: Function, scope?: any) {
         if (scope) func = func.bind(scope);
         this._queue.queue(func);
     }
